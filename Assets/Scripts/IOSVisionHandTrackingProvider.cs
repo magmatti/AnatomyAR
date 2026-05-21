@@ -56,15 +56,15 @@ public class IOSVisionHandTrackingProvider : MonoBehaviour
 
     private void Update()
     {
-#if UNITY_IOS && !UNITY_EDITOR
-        if (Time.time < nextDetectionTime)
-        {
-            return;
-        }
+    #if UNITY_IOS && !UNITY_EDITOR
+            if (Time.time < nextDetectionTime)
+            {
+                return;
+            }
 
-        nextDetectionTime = Time.time + 1f / detectionFps;
-        ProcessCameraFrame();
-#endif
+            nextDetectionTime = Time.time + 1f / detectionFps;
+            ProcessCameraFrame();
+    #endif
     }
 
 #if UNITY_IOS && !UNITY_EDITOR

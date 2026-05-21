@@ -9,9 +9,18 @@ public class HandSkeletonVisualizer : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float minimumConfidence = 0.5f;
     [SerializeField] private float smoothingSpeed = 18f;
+    [SerializeField] private bool showDebugVisualization = true;
+
+    public bool IsHandVisible { get; private set; }
+
+    public bool TryGetSmoothedPosition(HandJointType jointType, out Vector3 position)
+    {
+        return smoothedPositions.TryGetValue(jointType, out position);
+    }
 
     private readonly Dictionary<HandJointType, GameObject> jointObjects = new();
     private readonly Dictionary<HandJointType, Vector3> smoothedPositions = new();
+    private readonly HashSet<HandJointType> trackedJoints = new();
 
     private readonly HandJointType[][] handConnections =
     {
@@ -33,6 +42,8 @@ public class HandSkeletonVisualizer : MonoBehaviour
 
     public void UpdateHand(List<HandJointData> joints)
     {
+        trackedJoints.Clear();
+
         foreach (HandJointData joint in joints)
         {
             if (joint.confidence < minimumConfidence)
@@ -59,17 +70,22 @@ public class HandSkeletonVisualizer : MonoBehaviour
             );
 
             smoothedPositions[joint.jointType] = newPosition;
+            trackedJoints.Add(joint.jointType);
 
             GameObject jointObject = jointObjects[joint.jointType];
             jointObject.transform.position = newPosition;
-            jointObject.SetActive(true);
+            jointObject.SetActive(showDebugVisualization);
         }
 
+        IsHandVisible = trackedJoints.Count > 0;
         UpdateLines();
     }
 
     public void HideHand()
     {
+        trackedJoints.Clear();
+        IsHandVisible = false;
+
         foreach (GameObject jointObject in jointObjects.Values)
         {
             jointObject.SetActive(false);
@@ -125,16 +141,15 @@ public class HandSkeletonVisualizer : MonoBehaviour
                 HandJointType startJoint = finger[i];
                 HandJointType endJoint = finger[i + 1];
 
-                GameObject startObject = jointObjects[startJoint];
-                GameObject endObject = jointObjects[endJoint];
-
                 LineRenderer line = lineRenderers[lineIndex];
 
-                if (startObject.activeSelf && endObject.activeSelf)
+                bool bothTracked = trackedJoints.Contains(startJoint) && trackedJoints.Contains(endJoint);
+
+                if (showDebugVisualization && bothTracked)
                 {
                     line.enabled = true;
-                    line.SetPosition(0, startObject.transform.position);
-                    line.SetPosition(1, endObject.transform.position);
+                    line.SetPosition(0, smoothedPositions[startJoint]);
+                    line.SetPosition(1, smoothedPositions[endJoint]);
                 }
                 else
                 {
