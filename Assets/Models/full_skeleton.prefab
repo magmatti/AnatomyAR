@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6307634516621991672}
+  - component: {fileID: 3381833893403740122}
   m_Layer: 0
   m_Name: full_skeleton
   m_TagString: Untagged
@@ -33,6 +34,31 @@ Transform:
   - {fileID: 8607501295098750148}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3381833893403740122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196162842063470405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e3d852d79fb4bc1a819280456e410dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkeletonRegionDisplayController
+  skeletonRoot: {fileID: 6307634516621991672}
+  leftRootName: left_skeleton
+  rightRootName: right_skeleton
+  regionDefinitions: []
+  buildDefaultMappingsWhenEmpty: 1
+  hideOnStart: 1
+  followTrackedRegion: 1
+  trackedScaleMultiplier: 1.35
+  minimumScale: 0.05
+  maximumScale: 5
+  positionSmoothing: 18
+  scaleSmoothing: 14
+  cameraRelativeOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &4014315376509802331
 PrefabInstance:
   m_ObjectHideFlags: 0
