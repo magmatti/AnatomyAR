@@ -12,10 +12,23 @@ public class HandSkeletonVisualizer : MonoBehaviour
     [SerializeField] private bool showDebugVisualization = true;
 
     public bool IsHandVisible { get; private set; }
+    public bool DebugLinesVisible => showDebugVisualization;
 
     public bool TryGetSmoothedPosition(HandJointType jointType, out Vector3 position)
     {
         return smoothedPositions.TryGetValue(jointType, out position);
+    }
+
+    public void SetDebugLinesVisible(bool isVisible)
+    {
+        showDebugVisualization = isVisible;
+
+        foreach (KeyValuePair<HandJointType, GameObject> jointObject in jointObjects)
+        {
+            jointObject.Value.SetActive(showDebugVisualization && trackedJoints.Contains(jointObject.Key));
+        }
+
+        UpdateLines();
     }
 
     private readonly Dictionary<HandJointType, GameObject> jointObjects = new();

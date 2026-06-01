@@ -17,6 +17,9 @@ public class TrackedHandModelController : MonoBehaviour
     [Tooltip("If true, scale uses Wrist->MiddleTip distance. If false, uses Wrist->MiddleMCP (more stable when fingers are bent).")]
     [SerializeField] private bool scaleFromFingerTip = false;
 
+    [Header("Visibility")]
+    [SerializeField] private bool modelViewEnabled = true;
+
     [Header("Smoothing")]
     [SerializeField] private float positionSmoothing = 18f;
     [SerializeField] private float rotationSmoothing = 18f;
@@ -26,6 +29,20 @@ public class TrackedHandModelController : MonoBehaviour
     private Vector3 currentPosition;
     private Quaternion currentRotation = Quaternion.identity;
     private Vector3 currentScale = Vector3.one;
+
+    public bool ModelViewEnabled => modelViewEnabled;
+
+    public void SetModelViewEnabled(bool isEnabled)
+    {
+        modelViewEnabled = isEnabled;
+
+        if (!modelViewEnabled && handModelRoot != null && handModelRoot.gameObject.activeSelf)
+        {
+            handModelRoot.gameObject.SetActive(false);
+        }
+
+        initialized = false;
+    }
 
     private void Awake()
     {
@@ -44,6 +61,17 @@ public class TrackedHandModelController : MonoBehaviour
     {
         if (visualizer == null || handModelRoot == null)
         {
+            return;
+        }
+
+        if (!modelViewEnabled)
+        {
+            if (handModelRoot.gameObject.activeSelf)
+            {
+                handModelRoot.gameObject.SetActive(false);
+            }
+
+            initialized = false;
             return;
         }
 

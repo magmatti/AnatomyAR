@@ -39,6 +39,7 @@ public class BodyJointVisualizer : MonoBehaviour
     [SerializeField] private float smoothingSpeed = 18f;
 
     public bool IsBodyVisible { get; private set; }
+    public bool DebugLinesVisible => showDebugVisualization && drawDebugConnections;
 
     private readonly Dictionary<BodyJointType, GameObject> jointObjects = new();
     private readonly Dictionary<BodyJointType, Vector3> smoothedPositions = new();
@@ -72,6 +73,20 @@ public class BodyJointVisualizer : MonoBehaviour
 
         position = default;
         return false;
+    }
+
+    public void SetDebugLinesVisible(bool isVisible)
+    {
+        showDebugVisualization = isVisible;
+        drawDebugConnections = isVisible;
+
+        if (!isVisible)
+        {
+            HideDebugObjectsOnly();
+            return;
+        }
+
+        UpdateDebugConnections();
     }
 
     private void Awake()

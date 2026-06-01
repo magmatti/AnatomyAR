@@ -27,6 +27,9 @@ public class BoneLabelController : MonoBehaviour
     [SerializeField] private Color backgroundColor = new(0f, 0f, 0f, 0.78f);
     [SerializeField] private float visibleSeconds = 2.5f;
 
+    [Header("Highlight")]
+    [SerializeField] private Color highlightColor = new(1f, 0.78f, 0.08f, 1f);
+
     private Canvas canvas;
     private GameObject panel;
     private Text labelText;
@@ -34,6 +37,9 @@ public class BoneLabelController : MonoBehaviour
     private float visibleUntil;
     private int lastHandledFrame = -1;
     private bool didRenameKnownParts;
+    private Renderer highlightedRenderer;
+    private Material[] highlightedOriginalMaterials;
+    private Material highlightMaterial;
 
     private readonly Dictionary<string, string> handBoneNameOverrides = new()
     {
@@ -77,6 +83,7 @@ public class BoneLabelController : MonoBehaviour
     {
         EnhancedTouch.onFingerDown -= HandleFingerDown;
         EnhancedTouchSupport.Disable();
+        ClearHighlight();
     }
 
     private void Start()
@@ -135,6 +142,7 @@ public class BoneLabelController : MonoBehaviour
             if (IsSkeletonHit(hit.transform))
             {
                 ShowMessage(GetBoneLabel(hit.transform));
+                HighlightBone(hit.transform);
                 return;
             }
         }
@@ -246,6 +254,132 @@ public class BoneLabelController : MonoBehaviour
         BoxCollider boxCollider = renderer.gameObject.AddComponent<BoxCollider>();
         boxCollider.center = renderer.localBounds.center;
         boxCollider.size = renderer.localBounds.size + Vector3.one * fallbackColliderPadding;
+    }
+
+    private void HighlightBone(Transform candidate)
+    {
+        Renderer renderer = FindHighlightRenderer(candidate);
+
+        if (renderer == null || !renderer.enabled)
+        {
+            ClearHighlight();
+            return;
+        }
+
+        if (highlightedRenderer == renderer)
+        {
+            return;
+        }
+
+        Material material = GetHighlightMaterial();
+
+        if (material == null)
+        {
+            ClearHighlight();
+            return;
+        }
+
+        ClearHighlight();
+
+        highlightedRenderer = renderer;
+        highlightedOriginalMaterials = renderer.sharedMaterials;
+
+        int materialCount = Mathf.Max(1, highlightedOriginalMaterials.Length);
+        Material[] highlightedMaterials = new Material[materialCount];
+
+        for (int i = 0; i < highlightedMaterials.Length; i++)
+        {
+            highlightedMaterials[i] = material;
+        }
+
+        renderer.sharedMaterials = highlightedMaterials;
+    }
+
+    private Renderer FindHighlightRenderer(Transform candidate)
+    {
+        if (candidate == null)
+        {
+            return null;
+        }
+
+        if (candidate.TryGetComponent(out Renderer renderer))
+        {
+            return renderer;
+        }
+
+        return candidate.GetComponentInParent<Renderer>();
+    }
+
+    private Material GetHighlightMaterial()
+    {
+        if (highlightMaterial != null)
+        {
+            return highlightMaterial;
+        }
+
+        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+
+        if (shader == null)
+        {
+            shader = Shader.Find("Unlit/Color");
+        }
+
+        if (shader == null)
+        {
+            shader = Shader.Find("Sprites/Default");
+        }
+
+        if (shader == null)
+        {
+            shader = Shader.Find("Standard");
+        }
+
+        if (shader == null)
+        {
+            return null;
+        }
+
+        highlightMaterial = new Material(shader);
+        ApplyMaterialColor(highlightMaterial, highlightColor);
+
+        return highlightMaterial;
+    }
+
+    private void ApplyMaterialColor(Material material, Color color)
+    {
+        if (material == null)
+        {
+            return;
+        }
+
+        material.color = color;
+
+        if (material.HasProperty("_BaseColor"))
+        {
+            material.SetColor("_BaseColor", color);
+        }
+
+        if (material.HasProperty("_Color"))
+        {
+            material.SetColor("_Color", color);
+        }
+
+        if (material.HasProperty("_EmissionColor"))
+        {
+            material.EnableKeyword("_EMISSION");
+            material.SetColor("_EmissionColor", color);
+        }
+    }
+
+    private void ClearHighlight()
+    {
+        if (highlightedRenderer != null && highlightedOriginalMaterials != null)
+        {
+            highlightedRenderer.sharedMaterials = highlightedOriginalMaterials;
+        }
+
+        highlightedRenderer = null;
+        highlightedOriginalMaterials = null;
     }
 
     private bool IsVisibleModelPart(Transform candidate)
@@ -497,6 +631,7 @@ public class BoneLabelController : MonoBehaviour
     private void HideLabel()
     {
         currentMessage = string.Empty;
+        ClearHighlight();
 
         if (labelText != null)
         {

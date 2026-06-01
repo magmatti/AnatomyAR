@@ -52,12 +52,16 @@ MonoBehaviour:
   regionDefinitions: []
   buildDefaultMappingsWhenEmpty: 1
   hideOnStart: 1
+  modelViewEnabled: 1
   followTrackedRegion: 1
-  trackedScaleMultiplier: 1.35
+  trackedScaleMultiplier: 1
   minimumScale: 0.05
   maximumScale: 5
   positionSmoothing: 18
+  rotationSmoothing: 14
   scaleSmoothing: 14
+  faceCameraWhenTracked: 1
+  modelRotationOffsetEuler: {x: 0, y: 0, z: 0}
   cameraRelativeOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &4014315376509802331
 PrefabInstance:

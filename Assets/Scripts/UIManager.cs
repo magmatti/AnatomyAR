@@ -6,6 +6,12 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     private GameObject instructionsPanel;
+    private GameObject trackingControlsPanel;
+
+    private void Start()
+    {
+        CreateTrackingControlsPanelIfNeeded();
+    }
 
     public void OnHandButtonPressed()
     {
@@ -43,6 +49,89 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Quit pressed!");
         Application.Quit();
+    }
+
+    private void CreateTrackingControlsPanelIfNeeded()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        if (sceneName != "HandTrackingScene" && sceneName != "WholeBodyTrackingScene")
+        {
+            return;
+        }
+
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+
+        if (canvas == null)
+        {
+            Debug.LogWarning("Tracking controls could not be created because no Canvas was found.");
+            return;
+        }
+
+        trackingControlsPanel = new GameObject("TrackingControlsPanel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        trackingControlsPanel.transform.SetParent(canvas.transform, false);
+
+        RectTransform panelRect = trackingControlsPanel.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(1f, 1f);
+        panelRect.anchorMax = new Vector2(1f, 1f);
+        panelRect.pivot = new Vector2(1f, 1f);
+        panelRect.anchoredPosition = new Vector2(-16f, -64f);
+        panelRect.sizeDelta = new Vector2(168f, 86f);
+
+        Image panelImage = trackingControlsPanel.GetComponent<Image>();
+        panelImage.color = new Color(0f, 0f, 0f, 0.54f);
+
+        if (sceneName == "HandTrackingScene")
+        {
+            CreateHandTrackingControls(trackingControlsPanel.transform);
+            return;
+        }
+
+        CreateWholeBodyTrackingControls(trackingControlsPanel.transform);
+    }
+
+    private void CreateHandTrackingControls(Transform parent)
+    {
+        TrackedHandModelController handModel = FindFirstObjectByType<TrackedHandModelController>(FindObjectsInactive.Include);
+        HandSkeletonVisualizer handVisualizer = FindFirstObjectByType<HandSkeletonVisualizer>(FindObjectsInactive.Include);
+
+        Toggle modelToggle = CreateTrackingToggle("ModelViewToggle", parent, "3D Model", 0, handModel == null || handModel.ModelViewEnabled);
+        modelToggle.interactable = handModel != null;
+
+        if (handModel != null)
+        {
+            modelToggle.onValueChanged.AddListener(handModel.SetModelViewEnabled);
+        }
+
+        Toggle debugToggle = CreateTrackingToggle("DebugLinesToggle", parent, "Debug Lines", 1, handVisualizer == null || handVisualizer.DebugLinesVisible);
+        debugToggle.interactable = handVisualizer != null;
+
+        if (handVisualizer != null)
+        {
+            debugToggle.onValueChanged.AddListener(handVisualizer.SetDebugLinesVisible);
+        }
+    }
+
+    private void CreateWholeBodyTrackingControls(Transform parent)
+    {
+        SkeletonRegionDisplayController skeletonDisplay = FindFirstObjectByType<SkeletonRegionDisplayController>(FindObjectsInactive.Include);
+        BodyJointVisualizer bodyVisualizer = FindFirstObjectByType<BodyJointVisualizer>(FindObjectsInactive.Include);
+
+        Toggle modelToggle = CreateTrackingToggle("ModelViewToggle", parent, "3D Model", 0, skeletonDisplay == null || skeletonDisplay.ModelViewEnabled);
+        modelToggle.interactable = skeletonDisplay != null;
+
+        if (skeletonDisplay != null)
+        {
+            modelToggle.onValueChanged.AddListener(skeletonDisplay.SetModelViewEnabled);
+        }
+
+        Toggle debugToggle = CreateTrackingToggle("DebugLinesToggle", parent, "Debug Lines", 1, bodyVisualizer == null || bodyVisualizer.DebugLinesVisible);
+        debugToggle.interactable = bodyVisualizer != null;
+
+        if (bodyVisualizer != null)
+        {
+            debugToggle.onValueChanged.AddListener(bodyVisualizer.SetDebugLinesVisible);
+        }
     }
 
     private void CreateInstructionsPanel()
@@ -102,7 +191,7 @@ public class UIManager : MonoBehaviour
         bodyRect.offsetMin = new Vector2(24f, 86f);
         bodyRect.offsetMax = new Vector2(-24f, -82f);
         body.alignment = TextAlignmentOptions.TopLeft;
-        body.enableWordWrapping = true;
+        body.textWrappingMode = TextWrappingModes.Normal;
 
         Button dismissButton = CreateButton("DismissButton", dialog.transform, "Dismiss");
         RectTransform buttonRect = dismissButton.GetComponent<RectTransform>();
@@ -150,5 +239,62 @@ public class UIManager : MonoBehaviour
         buttonText.alignment = TextAlignmentOptions.Center;
 
         return button;
+    }
+
+    private static Toggle CreateTrackingToggle(string objectName, Transform parent, string label, int index, bool isOn)
+    {
+        GameObject toggleObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Toggle));
+        toggleObject.transform.SetParent(parent, false);
+
+        RectTransform toggleRect = toggleObject.GetComponent<RectTransform>();
+        toggleRect.anchorMin = new Vector2(0f, 1f);
+        toggleRect.anchorMax = new Vector2(1f, 1f);
+        toggleRect.pivot = new Vector2(0.5f, 1f);
+        toggleRect.anchoredPosition = new Vector2(0f, -8f - index * 36f);
+        toggleRect.sizeDelta = new Vector2(-16f, 30f);
+
+        Image rowImage = toggleObject.GetComponent<Image>();
+        rowImage.color = new Color(1f, 1f, 1f, 0f);
+
+        GameObject boxObject = new GameObject("Box", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        boxObject.transform.SetParent(toggleObject.transform, false);
+
+        RectTransform boxRect = boxObject.GetComponent<RectTransform>();
+        boxRect.anchorMin = new Vector2(0f, 0.5f);
+        boxRect.anchorMax = new Vector2(0f, 0.5f);
+        boxRect.pivot = new Vector2(0f, 0.5f);
+        boxRect.anchoredPosition = new Vector2(8f, 0f);
+        boxRect.sizeDelta = new Vector2(22f, 22f);
+
+        Image boxImage = boxObject.GetComponent<Image>();
+        boxImage.color = new Color(1f, 1f, 1f, 0.92f);
+
+        GameObject checkObject = new GameObject("Checkmark", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        checkObject.transform.SetParent(boxObject.transform, false);
+
+        RectTransform checkRect = checkObject.GetComponent<RectTransform>();
+        checkRect.anchorMin = new Vector2(0.5f, 0.5f);
+        checkRect.anchorMax = new Vector2(0.5f, 0.5f);
+        checkRect.pivot = new Vector2(0.5f, 0.5f);
+        checkRect.anchoredPosition = Vector2.zero;
+        checkRect.sizeDelta = new Vector2(14f, 14f);
+
+        Image checkImage = checkObject.GetComponent<Image>();
+        checkImage.color = new Color(0.12f, 0.72f, 0.32f, 1f);
+
+        TextMeshProUGUI toggleText = CreateText("Label", toggleObject.transform, label, 14f, FontStyles.Bold);
+        RectTransform labelRect = toggleText.GetComponent<RectTransform>();
+        labelRect.anchorMin = new Vector2(0f, 0f);
+        labelRect.anchorMax = new Vector2(1f, 1f);
+        labelRect.offsetMin = new Vector2(38f, 0f);
+        labelRect.offsetMax = new Vector2(-6f, 0f);
+        toggleText.alignment = TextAlignmentOptions.MidlineLeft;
+
+        Toggle toggle = toggleObject.GetComponent<Toggle>();
+        toggle.targetGraphic = boxImage;
+        toggle.graphic = checkImage;
+        toggle.isOn = isOn;
+
+        return toggle;
     }
 }

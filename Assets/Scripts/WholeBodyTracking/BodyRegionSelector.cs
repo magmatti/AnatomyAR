@@ -38,7 +38,6 @@ public class BodyRegionSelector : MonoBehaviour
     private readonly List<BodyRegionRule> rules = new();
     private readonly BodyRegion[] debugRegions =
     {
-        BodyRegion.Head,
         BodyRegion.Torso,
         BodyRegion.LeftUpperArm,
         BodyRegion.LeftForearm,
@@ -116,16 +115,16 @@ public class BodyRegionSelector : MonoBehaviour
 
         BodyRegion? debugRegion = null;
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame) debugRegion = BodyRegion.Head;
-        if (Keyboard.current.digit2Key.wasPressedThisFrame) debugRegion = BodyRegion.Torso;
-        if (Keyboard.current.digit3Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftUpperArm;
-        if (Keyboard.current.digit4Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftForearm;
-        if (Keyboard.current.digit5Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftHand;
-        if (Keyboard.current.digit6Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftThigh;
-        if (Keyboard.current.digit7Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftLowerLeg;
-        if (Keyboard.current.digit8Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftFoot;
-        if (Keyboard.current.digit9Key.wasPressedThisFrame) debugRegion = BodyRegion.RightUpperArm;
-        if (Keyboard.current.digit0Key.wasPressedThisFrame) debugRegion = BodyRegion.RightForearm;
+        if (Keyboard.current.digit1Key.wasPressedThisFrame) debugRegion = BodyRegion.Torso;
+        if (Keyboard.current.digit2Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftUpperArm;
+        if (Keyboard.current.digit3Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftForearm;
+        if (Keyboard.current.digit4Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftHand;
+        if (Keyboard.current.digit5Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftThigh;
+        if (Keyboard.current.digit6Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftLowerLeg;
+        if (Keyboard.current.digit7Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftFoot;
+        if (Keyboard.current.digit8Key.wasPressedThisFrame) debugRegion = BodyRegion.RightUpperArm;
+        if (Keyboard.current.digit9Key.wasPressedThisFrame) debugRegion = BodyRegion.RightForearm;
+        if (Keyboard.current.digit0Key.wasPressedThisFrame) debugRegion = BodyRegion.RightHand;
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -293,7 +292,6 @@ public class BodyRegionSelector : MonoBehaviour
     {
         rules.Clear();
 
-        rules.Add(new BodyRegionRule(BodyRegion.Head, BodyJointType.Head, BodyJointType.Neck));
         rules.Add(new BodyRegionRule(BodyRegion.Torso,
             BodyJointType.LeftShoulder, BodyJointType.RightShoulder, BodyJointType.LeftHip, BodyJointType.RightHip));
 

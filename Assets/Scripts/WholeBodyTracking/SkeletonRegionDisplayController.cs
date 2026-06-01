@@ -13,13 +13,20 @@ public class SkeletonRegionDisplayController : MonoBehaviour
     [SerializeField] private bool buildDefaultMappingsWhenEmpty = true;
     [SerializeField] private bool hideOnStart = true;
 
+    [Header("Visibility")]
+    [SerializeField] private bool modelViewEnabled = true;
+
     [Header("Tracked Placement")]
     [SerializeField] private bool followTrackedRegion = true;
-    [SerializeField] private float trackedScaleMultiplier = 1.35f;
+    [SerializeField] private float trackedScaleMultiplier = 1f;
     [SerializeField] private float minimumScale = 0.05f;
     [SerializeField] private float maximumScale = 5f;
     [SerializeField] private float positionSmoothing = 18f;
+    [SerializeField] private float rotationSmoothing = 14f;
     [SerializeField] private float scaleSmoothing = 14f;
+    [SerializeField] private bool faceCameraWhenTracked = true;
+    [Tooltip("Applied after camera-facing rotation. Keep this at zero unless the imported skeleton's local front axis needs correction.")]
+    [SerializeField] private Vector3 modelRotationOffsetEuler = Vector3.zero;
     [Tooltip("Offset in camera-relative meters after the detected region has been centered. X/Y follow camera right/up, Z follows camera forward.")]
     [SerializeField] private Vector3 cameraRelativeOffset = Vector3.zero;
 
@@ -29,11 +36,34 @@ public class SkeletonRegionDisplayController : MonoBehaviour
     private Transform rightRoot;
     private bool placementInitialized;
     private Vector3 currentPosition;
+    private Quaternion currentRotation = Quaternion.identity;
     private Vector3 currentScale;
 
     public BodyRegion? CurrentRegion { get; private set; }
 
     public IReadOnlyList<Renderer> AllRenderers => allRenderers;
+    public bool ModelViewEnabled => modelViewEnabled;
+
+    public void SetModelViewEnabled(bool isEnabled)
+    {
+        if (modelViewEnabled == isEnabled)
+        {
+            return;
+        }
+
+        modelViewEnabled = isEnabled;
+
+        if (!modelViewEnabled)
+        {
+            SetAllRendererVisibility(false);
+            return;
+        }
+
+        if (CurrentRegion.HasValue)
+        {
+            ShowRegion(CurrentRegion.Value);
+        }
+    }
 
     private void Awake()
     {
@@ -60,6 +90,12 @@ public class SkeletonRegionDisplayController : MonoBehaviour
 
     public void ShowRegion(BodyRegion region)
     {
+        if (region == BodyRegion.Head)
+        {
+            HideAll();
+            return;
+        }
+
         if (CurrentRegion != region)
         {
             placementInitialized = false;
@@ -73,7 +109,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
         foreach (Renderer renderer in allRenderers)
         {
             bool visible = definition != null && MatchesDefinition(renderer.transform, definition);
-            renderer.enabled = visible;
+            renderer.enabled = modelViewEnabled && visible;
 
             if (visible)
             {
@@ -120,27 +156,35 @@ public class SkeletonRegionDisplayController : MonoBehaviour
         );
 
         Vector3 targetScale = Vector3.one * targetUniformScale;
+        Quaternion targetRotation = GetTargetRotation(targetCenter, arCamera);
         Vector3 offset = GetCameraRelativeOffset(arCamera);
-        Vector3 targetPosition = targetCenter + offset - skeletonRoot.rotation * (localBounds.center * targetUniformScale);
+        Vector3 targetPosition = targetCenter + offset - targetRotation * (localBounds.center * targetUniformScale);
 
         if (!placementInitialized)
         {
             currentPosition = targetPosition;
+            currentRotation = targetRotation;
             currentScale = targetScale;
             placementInitialized = true;
         }
         else
         {
             currentPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * positionSmoothing);
+            currentRotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSmoothing);
             currentScale = Vector3.Lerp(currentScale, targetScale, Time.deltaTime * scaleSmoothing);
         }
 
-        skeletonRoot.position = currentPosition;
+        skeletonRoot.SetPositionAndRotation(currentPosition, currentRotation);
         skeletonRoot.localScale = currentScale;
     }
 
     public bool IsVisibleSkeletonPart(Transform candidate)
     {
+        if (!modelViewEnabled)
+        {
+            return false;
+        }
+
         while (candidate != null && candidate != skeletonRoot)
         {
             if (visibleParts.Contains(candidate))
@@ -200,7 +244,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
 
         foreach (Renderer renderer in allRenderers)
         {
-            if (renderer == null || !renderer.enabled)
+            if (renderer == null || !visibleParts.Contains(renderer.transform))
             {
                 continue;
             }
@@ -252,6 +296,43 @@ public class SkeletonRegionDisplayController : MonoBehaviour
         return cameraTransform.right * cameraRelativeOffset.x +
                cameraTransform.up * cameraRelativeOffset.y +
                cameraTransform.forward * cameraRelativeOffset.z;
+    }
+
+    private Quaternion GetTargetRotation(Vector3 targetCenter, Camera arCamera)
+    {
+        Quaternion offsetRotation = Quaternion.Euler(modelRotationOffsetEuler);
+
+        if (!faceCameraWhenTracked || arCamera == null)
+        {
+            return offsetRotation;
+        }
+
+        Vector3 towardCamera = arCamera.transform.position - targetCenter;
+        towardCamera.y = 0f;
+
+        if (towardCamera.sqrMagnitude <= 1e-6f)
+        {
+            towardCamera = -arCamera.transform.forward;
+            towardCamera.y = 0f;
+        }
+
+        if (towardCamera.sqrMagnitude <= 1e-6f)
+        {
+            return offsetRotation;
+        }
+
+        return Quaternion.LookRotation(towardCamera.normalized, Vector3.up) * offsetRotation;
+    }
+
+    private void SetAllRendererVisibility(bool isVisible)
+    {
+        foreach (Renderer renderer in allRenderers)
+        {
+            if (renderer != null)
+            {
+                renderer.enabled = isVisible;
+            }
+        }
     }
 
     private void CollectRenderers()
