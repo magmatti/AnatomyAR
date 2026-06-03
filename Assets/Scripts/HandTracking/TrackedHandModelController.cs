@@ -8,13 +8,11 @@ public class TrackedHandModelController : MonoBehaviour
     [SerializeField] private Camera arCamera;
 
     [Header("Offsets")]
-    [Tooltip("In hand-size units. X/Y in the hand's local frame (X = across palm toward little, Y = wrist->fingers). Z is in CAMERA direction (positive = toward camera), so depth tuning stays consistent between palm and back views.")]
     [SerializeField] private Vector3 positionOffset = Vector3.zero;
     [SerializeField] private Vector3 rotationOffsetEuler = Vector3.zero;
     [SerializeField] private float scaleMultiplier = 1f;
 
     [Header("Scale Source")]
-    [Tooltip("If true, scale uses Wrist->MiddleTip distance. If false, uses Wrist->MiddleMCP (more stable when fingers are bent).")]
     [SerializeField] private bool scaleFromFingerTip = false;
 
     [Header("Visibility")]
