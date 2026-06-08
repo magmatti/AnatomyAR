@@ -1,5 +1,10 @@
+using System;
+using System.Runtime.InteropServices;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 public class IOSVisionHandFrameProcessing : MonoBehaviour
 {
