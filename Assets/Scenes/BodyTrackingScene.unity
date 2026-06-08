@@ -524,7 +524,7 @@ MonoBehaviour:
   modelViewToggle: {fileID: 1678380044}
   debugLinesToggle: {fileID: 1943352348}
   handModelController: {fileID: 0}
-  handSkeletonVisualizer: {fileID: 0}
+  handSkeletonDebugVisualizer: {fileID: 0}
   skeletonRegionDisplayController: {fileID: 1238304499}
   bodyJointVisualizer: {fileID: 351467498}
 --- !u!1 &704918161

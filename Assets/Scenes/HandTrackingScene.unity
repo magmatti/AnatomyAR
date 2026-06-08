@@ -528,6 +528,8 @@ GameObject:
   - component: {fileID: 531987893}
   - component: {fileID: 531987896}
   - component: {fileID: 531987897}
+  - component: {fileID: 531987898}
+  - component: {fileID: 531987899}
   m_Layer: 0
   m_Name: HandTrackingManager
   m_TagString: Untagged
@@ -544,13 +546,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 531987892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05b980f3179044b9a8664cbf07cac7c9, type: 3}
+  m_Script: {fileID: 11500000, guid: c7700b26f88441ab872e1d4b21606937, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandSkeletonVisualizer
-  jointPrefab: {fileID: 3042092137039449810, guid: fea40d455e09a4b528f63b9889533bf1, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::HandJointTracker
   minimumConfidence: 0.5
   smoothingSpeed: 18
-  showDebugVisualization: 1
 --- !u!4 &531987894
 Transform:
   m_ObjectHideFlags: 0
@@ -579,14 +579,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f27cffe88df654384873178d9bc32219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
-  cameraManager: {fileID: 1150400567}
-  visualizer: {fileID: 531987893}
+  frameProcessing: {fileID: 531987898}
+  handJointTracker: {fileID: 531987893}
   arCamera: {fileID: 1150400569}
-  detectionFps: 15
   distanceFromCamera: 0.7
   minimumConfidence: 0.3
-  mirrorX: 0
-  flipY: 0
 --- !u!114 &531987897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -599,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8297cc1eb69480eac6e913741be83d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrackedHandModelController
-  visualizer: {fileID: 531987893}
+  handJointTracker: {fileID: 531987893}
   handModelRoot: {fileID: 164480348}
   arCamera: {fileID: 1150400569}
   positionOffset: {x: 0.9, y: -1, z: -0.8}
@@ -610,6 +607,35 @@ MonoBehaviour:
   positionSmoothing: 18
   rotationSmoothing: 18
   scaleSmoothing: 12
+--- !u!114 &531987898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531987892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a179b3214b9d43a5b273f7fe4c6850ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IOSVisionHandFrameProcessing
+  cameraManager: {fileID: 1150400567}
+  detectionFps: 15
+--- !u!114 &531987899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531987892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2674d51014e4efc88abfa1ebe1ed49b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandSkeletonDebugVisualizer
+  tracker: {fileID: 531987893}
+  jointPrefab: {fileID: 3042092137039449810, guid: fea40d455e09a4b528f63b9889533bf1, type: 3}
+  showDebugVisualization: 1
 --- !u!1 &656015565
 GameObject:
   m_ObjectHideFlags: 0
@@ -1799,7 +1825,7 @@ MonoBehaviour:
   modelViewToggle: {fileID: 1520003634}
   debugLinesToggle: {fileID: 1931443479}
   handModelController: {fileID: 531987897}
-  handSkeletonVisualizer: {fileID: 531987893}
+  handSkeletonDebugVisualizer: {fileID: 531987899}
   skeletonRegionDisplayController: {fileID: 0}
   bodyJointVisualizer: {fileID: 0}
 --- !u!1 &1931443477

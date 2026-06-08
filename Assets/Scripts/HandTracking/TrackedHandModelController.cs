@@ -2,23 +2,18 @@ using UnityEngine;
 
 public class TrackedHandModelController : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private HandSkeletonVisualizer visualizer;
+    [SerializeField] private HandJointTracker handJointTracker;
     [SerializeField] private Transform handModelRoot;
     [SerializeField] private Camera arCamera;
 
-    [Header("Offsets")]
     [SerializeField] private Vector3 positionOffset = Vector3.zero;
     [SerializeField] private Vector3 rotationOffsetEuler = Vector3.zero;
     [SerializeField] private float scaleMultiplier = 1f;
 
-    [Header("Scale Source")]
     [SerializeField] private bool scaleFromFingerTip = false;
 
-    [Header("Visibility")]
     [SerializeField] private bool modelViewEnabled = true;
 
-    [Header("Smoothing")]
     [SerializeField] private float positionSmoothing = 18f;
     [SerializeField] private float rotationSmoothing = 18f;
     [SerializeField] private float scaleSmoothing = 12f;
@@ -44,9 +39,9 @@ public class TrackedHandModelController : MonoBehaviour
 
     private void Awake()
     {
-        if (visualizer == null)
+        if (handJointTracker == null)
         {
-            visualizer = GetComponentInParent<HandSkeletonVisualizer>();
+            handJointTracker = GetComponentInParent<HandJointTracker>();
         }
 
         if (arCamera == null)
@@ -57,7 +52,7 @@ public class TrackedHandModelController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (visualizer == null || handModelRoot == null)
+        if (handJointTracker == null || handModelRoot == null)
         {
             return;
         }
@@ -73,7 +68,7 @@ public class TrackedHandModelController : MonoBehaviour
             return;
         }
 
-        if (!visualizer.IsHandVisible)
+        if (!handJointTracker.IsHandVisible)
         {
             if (handModelRoot.gameObject.activeSelf)
             {
@@ -83,11 +78,11 @@ public class TrackedHandModelController : MonoBehaviour
             return;
         }
 
-        if (!visualizer.TryGetSmoothedPosition(HandJointType.Wrist, out Vector3 wrist) ||
-            !visualizer.TryGetSmoothedPosition(HandJointType.IndexMCP, out Vector3 indexMCP) ||
-            !visualizer.TryGetSmoothedPosition(HandJointType.MiddleMCP, out Vector3 middleMCP) ||
-            !visualizer.TryGetSmoothedPosition(HandJointType.RingMCP, out Vector3 ringMCP) ||
-            !visualizer.TryGetSmoothedPosition(HandJointType.LittleMCP, out Vector3 littleMCP))
+        if (!handJointTracker.TryGetSmoothedPosition(HandJointType.Wrist, out Vector3 wrist) ||
+            !handJointTracker.TryGetSmoothedPosition(HandJointType.IndexMCP, out Vector3 indexMCP) ||
+            !handJointTracker.TryGetSmoothedPosition(HandJointType.MiddleMCP, out Vector3 middleMCP) ||
+            !handJointTracker.TryGetSmoothedPosition(HandJointType.RingMCP, out Vector3 ringMCP) ||
+            !handJointTracker.TryGetSmoothedPosition(HandJointType.LittleMCP, out Vector3 littleMCP))
         {
             return;
         }
@@ -118,7 +113,7 @@ public class TrackedHandModelController : MonoBehaviour
         Quaternion targetRotation = baseRotation * Quaternion.Euler(rotationOffsetEuler);
 
         float handSize;
-        if (scaleFromFingerTip && visualizer.TryGetSmoothedPosition(HandJointType.MiddleTip, out Vector3 middleTip))
+        if (scaleFromFingerTip && handJointTracker.TryGetSmoothedPosition(HandJointType.MiddleTip, out Vector3 middleTip))
         {
             handSize = Vector3.Distance(wrist, middleTip);
         }

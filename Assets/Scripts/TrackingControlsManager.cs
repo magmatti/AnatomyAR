@@ -6,7 +6,7 @@ public class TrackingControlsManager : MonoBehaviour
     [SerializeField] private Toggle modelViewToggle;
     [SerializeField] private Toggle debugLinesToggle;
     [SerializeField] private TrackedHandModelController handModelController;
-    [SerializeField] private HandSkeletonVisualizer handSkeletonVisualizer;
+    [SerializeField] private HandSkeletonDebugVisualizer handSkeletonDebugVisualizer;
     [SerializeField] private SkeletonRegionDisplayController skeletonRegionDisplayController;
     [SerializeField] private BodyJointVisualizer bodyJointVisualizer;
 
@@ -26,14 +26,16 @@ public class TrackingControlsManager : MonoBehaviour
         if (handModelController != null)
         {
             modelViewToggle.SetIsOnWithoutNotify(handModelController.ModelViewEnabled);
-            modelViewToggle.onValueChanged.AddListener(handModelController.SetModelViewEnabled);
+            modelViewToggle.onValueChanged
+                .AddListener(handModelController.SetModelViewEnabled);
             return;
         }
 
         if (skeletonRegionDisplayController != null)
         {
             modelViewToggle.SetIsOnWithoutNotify(skeletonRegionDisplayController.ModelViewEnabled);
-            modelViewToggle.onValueChanged.AddListener(skeletonRegionDisplayController.SetModelViewEnabled);
+            modelViewToggle.onValueChanged
+                .AddListener(skeletonRegionDisplayController.SetModelViewEnabled);
             return;
         }
 
@@ -47,17 +49,21 @@ public class TrackingControlsManager : MonoBehaviour
             return;
         }
 
-        if (handSkeletonVisualizer != null)
+        if (handSkeletonDebugVisualizer != null)
         {
-            debugLinesToggle.SetIsOnWithoutNotify(handSkeletonVisualizer.DebugLinesVisible);
-            debugLinesToggle.onValueChanged.AddListener(handSkeletonVisualizer.SetDebugLinesVisible);
+            debugLinesToggle
+                .SetIsOnWithoutNotify(handSkeletonDebugVisualizer.DebugLinesVisible);
+            debugLinesToggle.onValueChanged
+                .AddListener(handSkeletonDebugVisualizer.SetDebugLinesVisible);
             return;
         }
 
         if (bodyJointVisualizer != null)
         {
-            debugLinesToggle.SetIsOnWithoutNotify(bodyJointVisualizer.DebugLinesVisible);
-            debugLinesToggle.onValueChanged.AddListener(bodyJointVisualizer.SetDebugLinesVisible);
+            debugLinesToggle
+                .SetIsOnWithoutNotify(bodyJointVisualizer.DebugLinesVisible);
+            debugLinesToggle.onValueChanged
+                .AddListener(bodyJointVisualizer.SetDebugLinesVisible);
             return;
         }
 

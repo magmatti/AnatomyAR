@@ -5,7 +5,7 @@ using UnityEngine;
 public class IOSVisionHandTrackingProvider : MonoBehaviour
 {
     [SerializeField] private IOSVisionHandFrameProcessing frameProcessing;
-    [SerializeField] private HandSkeletonVisualizer visualizer;
+    [SerializeField] private HandJointTracker handJointTracker;
     [SerializeField] private Camera arCamera;
 
     [SerializeField] private float distanceFromCamera = 0.7f;
@@ -20,7 +20,7 @@ public class IOSVisionHandTrackingProvider : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(payload))
         {
-            visualizer.HideHand();
+            handJointTracker.HideHand();
             return;
         }
 
@@ -28,11 +28,11 @@ public class IOSVisionHandTrackingProvider : MonoBehaviour
 
         if (joints.Count == 0)
         {
-            visualizer.HideHand();
+            handJointTracker.HideHand();
             return;
         }
 
-        visualizer.UpdateHand(joints);
+        handJointTracker.UpdateHand(joints);
     }
 
     private List<HandJointData> ParseHandJoints(string payload)
