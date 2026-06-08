@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<QCARInfo>
-    <TargetSet version="3.4">
-        <AreaTarget version="5.2" bbox="-5.0315 -3.8754 -10.1423 10.8575 2.2784 7.8781" area="32" targetId="32f5c38fe51e475bbcc67b21afb44ff8" name="114_holo" pathAuthoring="32f5c38fe51e475bbcc67b21afb44ff8_authoring.glb" pathOcclusion="32f5c38fe51e475bbcc67b21afb44ff8_occlusion.3dt" pathNavMesh="32f5c38fe51e475bbcc67b21afb44ff8_navmesh.glb" cloudTarget="false" />
-    </TargetSet>
-</QCARInfo>
