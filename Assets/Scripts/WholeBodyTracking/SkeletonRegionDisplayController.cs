@@ -211,7 +211,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
             return string.Empty;
         }
 
-        string cleanName = rawName.Replace("_", " ").Trim();
+        string cleanName = rawName.Replace("_", " ").Trim().TrimEnd('.');
 
         if (cleanName.EndsWith(".r", System.StringComparison.OrdinalIgnoreCase) ||
             cleanName.EndsWith(".l", System.StringComparison.OrdinalIgnoreCase))
@@ -219,7 +219,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
             cleanName = cleanName.Substring(0, cleanName.Length - 2).Trim();
         }
 
-        return cleanName;
+        return cleanName.TrimEnd('.');
     }
 
     private Transform GetSkeletonPart(Transform candidate)
