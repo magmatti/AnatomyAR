@@ -6,10 +6,10 @@ public class BodyRegionSelector : MonoBehaviour
 {
     private class BodyRegionRule
     {
-        public BodyRegion region;
+        public BodyRegionType region;
         public BodyJointType[] joints;
 
-        public BodyRegionRule(BodyRegion region, params BodyJointType[] joints)
+        public BodyRegionRule(BodyRegionType region, params BodyJointType[] joints)
         {
             this.region = region;
             this.joints = joints;
@@ -32,27 +32,27 @@ public class BodyRegionSelector : MonoBehaviour
     [Header("Editor Debug")]
     [SerializeField] private bool enableKeyboardDebug = true;
 
-    public BodyRegion CurrentRegion { get; private set; }
+    public BodyRegionType CurrentRegion { get; private set; }
     public bool HasCurrentRegion { get; private set; }
 
     private readonly List<BodyRegionRule> rules = new();
-    private readonly BodyRegion[] debugRegions =
+    private readonly BodyRegionType[] debugRegions =
     {
-        BodyRegion.Torso,
-        BodyRegion.LeftUpperArm,
-        BodyRegion.LeftForearm,
-        BodyRegion.LeftHand,
-        BodyRegion.LeftThigh,
-        BodyRegion.LeftLowerLeg,
-        BodyRegion.LeftFoot,
-        BodyRegion.RightUpperArm,
-        BodyRegion.RightForearm,
-        BodyRegion.RightHand,
-        BodyRegion.RightThigh,
-        BodyRegion.RightLowerLeg,
-        BodyRegion.RightFoot
+        BodyRegionType.Torso,
+        BodyRegionType.LeftUpperArm,
+        BodyRegionType.LeftForearm,
+        BodyRegionType.LeftHand,
+        BodyRegionType.LeftThigh,
+        BodyRegionType.LeftLowerLeg,
+        BodyRegionType.LeftFoot,
+        BodyRegionType.RightUpperArm,
+        BodyRegionType.RightForearm,
+        BodyRegionType.RightHand,
+        BodyRegionType.RightThigh,
+        BodyRegionType.RightLowerLeg,
+        BodyRegionType.RightFoot
     };
-    private BodyRegion? pendingRegion;
+    private BodyRegionType? pendingRegion;
     private float pendingStartedAt;
     private float lastReliableBodyAt;
 
@@ -94,7 +94,7 @@ public class BodyRegionSelector : MonoBehaviour
             return;
         }
 
-        if (TryFindBestRegion(out BodyRegion bestRegion, out float bestScore) && bestScore >= minimumScore)
+        if (TryFindBestRegion(out BodyRegionType bestRegion, out float bestScore) && bestScore >= minimumScore)
         {
             lastReliableBodyAt = Time.time;
             ApplyStableRegion(bestRegion);
@@ -113,18 +113,18 @@ public class BodyRegionSelector : MonoBehaviour
             return false;
         }
 
-        BodyRegion? debugRegion = null;
+        BodyRegionType? debugRegion = null;
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame) debugRegion = BodyRegion.Torso;
-        if (Keyboard.current.digit2Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftUpperArm;
-        if (Keyboard.current.digit3Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftForearm;
-        if (Keyboard.current.digit4Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftHand;
-        if (Keyboard.current.digit5Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftThigh;
-        if (Keyboard.current.digit6Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftLowerLeg;
-        if (Keyboard.current.digit7Key.wasPressedThisFrame) debugRegion = BodyRegion.LeftFoot;
-        if (Keyboard.current.digit8Key.wasPressedThisFrame) debugRegion = BodyRegion.RightUpperArm;
-        if (Keyboard.current.digit9Key.wasPressedThisFrame) debugRegion = BodyRegion.RightForearm;
-        if (Keyboard.current.digit0Key.wasPressedThisFrame) debugRegion = BodyRegion.RightHand;
+        if (Keyboard.current.digit1Key.wasPressedThisFrame) debugRegion = BodyRegionType.Torso;
+        if (Keyboard.current.digit2Key.wasPressedThisFrame) debugRegion = BodyRegionType.LeftUpperArm;
+        if (Keyboard.current.digit3Key.wasPressedThisFrame) debugRegion = BodyRegionType.LeftForearm;
+        if (Keyboard.current.digit4Key.wasPressedThisFrame) debugRegion = BodyRegionType.LeftHand;
+        if (Keyboard.current.digit5Key.wasPressedThisFrame) debugRegion = BodyRegionType.LeftThigh;
+        if (Keyboard.current.digit6Key.wasPressedThisFrame) debugRegion = BodyRegionType.LeftLowerLeg;
+        if (Keyboard.current.digit7Key.wasPressedThisFrame) debugRegion = BodyRegionType.LeftFoot;
+        if (Keyboard.current.digit8Key.wasPressedThisFrame) debugRegion = BodyRegionType.RightUpperArm;
+        if (Keyboard.current.digit9Key.wasPressedThisFrame) debugRegion = BodyRegionType.RightForearm;
+        if (Keyboard.current.digit0Key.wasPressedThisFrame) debugRegion = BodyRegionType.RightHand;
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -153,11 +153,11 @@ public class BodyRegionSelector : MonoBehaviour
         return true;
     }
 
-    private BodyRegion GetNextDebugRegion(int direction)
+    private BodyRegionType GetNextDebugRegion(int direction)
     {
         if (!HasCurrentRegion)
         {
-            return BodyRegion.Torso;
+            return BodyRegionType.Torso;
         }
 
         int currentIndex = 0;
@@ -175,7 +175,7 @@ public class BodyRegionSelector : MonoBehaviour
         return debugRegions[nextIndex];
     }
 
-    private bool TryFindBestRegion(out BodyRegion bestRegion, out float bestScore)
+    private bool TryFindBestRegion(out BodyRegionType bestRegion, out float bestScore)
     {
         bestRegion = default;
         bestScore = float.MinValue;
@@ -238,7 +238,7 @@ public class BodyRegionSelector : MonoBehaviour
         return true;
     }
 
-    private void ApplyStableRegion(BodyRegion bestRegion)
+    private void ApplyStableRegion(BodyRegionType bestRegion)
     {
         if (HasCurrentRegion && CurrentRegion == bestRegion)
         {
@@ -260,7 +260,7 @@ public class BodyRegionSelector : MonoBehaviour
         }
     }
 
-    private void ShowRegion(BodyRegion region)
+    private void ShowRegion(BodyRegionType region)
     {
         CurrentRegion = region;
         HasCurrentRegion = true;
@@ -292,25 +292,25 @@ public class BodyRegionSelector : MonoBehaviour
     {
         rules.Clear();
 
-        rules.Add(new BodyRegionRule(BodyRegion.Torso,
+        rules.Add(new BodyRegionRule(BodyRegionType.Torso,
             BodyJointType.LeftShoulder, BodyJointType.RightShoulder, BodyJointType.LeftHip, BodyJointType.RightHip));
 
-        rules.Add(new BodyRegionRule(BodyRegion.LeftUpperArm, BodyJointType.LeftShoulder, BodyJointType.LeftElbow));
-        rules.Add(new BodyRegionRule(BodyRegion.RightUpperArm, BodyJointType.RightShoulder, BodyJointType.RightElbow));
-        rules.Add(new BodyRegionRule(BodyRegion.LeftForearm, BodyJointType.LeftElbow, BodyJointType.LeftWrist));
-        rules.Add(new BodyRegionRule(BodyRegion.RightForearm, BodyJointType.RightElbow, BodyJointType.RightWrist));
-        rules.Add(new BodyRegionRule(BodyRegion.LeftHand, BodyJointType.LeftWrist));
-        rules.Add(new BodyRegionRule(BodyRegion.RightHand, BodyJointType.RightWrist));
+        rules.Add(new BodyRegionRule(BodyRegionType.LeftUpperArm, BodyJointType.LeftShoulder, BodyJointType.LeftElbow));
+        rules.Add(new BodyRegionRule(BodyRegionType.RightUpperArm, BodyJointType.RightShoulder, BodyJointType.RightElbow));
+        rules.Add(new BodyRegionRule(BodyRegionType.LeftForearm, BodyJointType.LeftElbow, BodyJointType.LeftWrist));
+        rules.Add(new BodyRegionRule(BodyRegionType.RightForearm, BodyJointType.RightElbow, BodyJointType.RightWrist));
+        rules.Add(new BodyRegionRule(BodyRegionType.LeftHand, BodyJointType.LeftWrist));
+        rules.Add(new BodyRegionRule(BodyRegionType.RightHand, BodyJointType.RightWrist));
 
-        rules.Add(new BodyRegionRule(BodyRegion.LeftThigh, BodyJointType.LeftHip, BodyJointType.LeftKnee));
-        rules.Add(new BodyRegionRule(BodyRegion.RightThigh, BodyJointType.RightHip, BodyJointType.RightKnee));
-        rules.Add(new BodyRegionRule(BodyRegion.LeftLowerLeg, BodyJointType.LeftKnee, BodyJointType.LeftAnkle));
-        rules.Add(new BodyRegionRule(BodyRegion.RightLowerLeg, BodyJointType.RightKnee, BodyJointType.RightAnkle));
-        rules.Add(new BodyRegionRule(BodyRegion.LeftFoot, BodyJointType.LeftAnkle));
-        rules.Add(new BodyRegionRule(BodyRegion.RightFoot, BodyJointType.RightAnkle));
+        rules.Add(new BodyRegionRule(BodyRegionType.LeftThigh, BodyJointType.LeftHip, BodyJointType.LeftKnee));
+        rules.Add(new BodyRegionRule(BodyRegionType.RightThigh, BodyJointType.RightHip, BodyJointType.RightKnee));
+        rules.Add(new BodyRegionRule(BodyRegionType.LeftLowerLeg, BodyJointType.LeftKnee, BodyJointType.LeftAnkle));
+        rules.Add(new BodyRegionRule(BodyRegionType.RightLowerLeg, BodyJointType.RightKnee, BodyJointType.RightAnkle));
+        rules.Add(new BodyRegionRule(BodyRegionType.LeftFoot, BodyJointType.LeftAnkle));
+        rules.Add(new BodyRegionRule(BodyRegionType.RightFoot, BodyJointType.RightAnkle));
     }
 
-    private void UpdateRegionPlacement(BodyRegion region)
+    private void UpdateRegionPlacement(BodyRegionType region)
     {
         if (!HasCurrentRegion || CurrentRegion != region)
         {
@@ -323,7 +323,7 @@ public class BodyRegionSelector : MonoBehaviour
         }
     }
 
-    private bool TryGetRegionWorldAnchor(BodyRegion region, out Vector3 center, out float span)
+    private bool TryGetRegionWorldAnchor(BodyRegionType region, out Vector3 center, out float span)
     {
         center = Vector3.zero;
         span = 0f;
@@ -377,7 +377,7 @@ public class BodyRegionSelector : MonoBehaviour
         return true;
     }
 
-    private BodyRegionRule FindRule(BodyRegion region)
+    private BodyRegionRule FindRule(BodyRegionType region)
     {
         foreach (BodyRegionRule rule in rules)
         {
