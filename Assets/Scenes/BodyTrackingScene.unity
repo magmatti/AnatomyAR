@@ -1832,7 +1832,6 @@ MonoBehaviour:
   arCamera: {fileID: 1150400569}
   skeletonController: {fileID: 0}
   modelRoot: {fileID: 0}
-  renameKnownHandParts: 0
   maxRayDistance: 100
   raycastMask:
     serializedVersion: 2
