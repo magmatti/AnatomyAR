@@ -2,7 +2,8 @@ using System.Collections.Generic;
 
 public static class HandBoneNamesDictionary
 {
-    public static readonly IReadOnlyDictionary<string, string> Overrides = new Dictionary<string, string>
+    public static readonly IReadOnlyDictionary<string, string> Overrides = 
+        new Dictionary<string, string>
     {
         { "Palm", "Metacarpals" },
         { "FingerSeg7", "Index metacarpal" },
@@ -21,6 +22,7 @@ public static class HandBoneNamesDictionary
         { "PointerFingerSeg3", "Index distal phalanx" },
         { "Middle", "Middle proximal phalanx" },
         { "MIddleFingerSeg2", "Middle middle phalanx" },
+        { "MIddleFingerSeg3", "Middle distal phalanx" },
         { "MiddleFingerSeg2", "Middle middle phalanx" },
         { "MiddleFingerSeg3", "Middle distal phalanx" },
         { "Ring", "Ring proximal phalanx" },
