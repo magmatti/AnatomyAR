@@ -30,7 +30,8 @@ public sealed class BoneTargetResolver
 
         if (skeletonController == null)
         {
-            skeletonController = Object.FindFirstObjectByType<SkeletonRegionDisplayController>(FindObjectsInactive.Include);
+            skeletonController = Object
+                .FindFirstObjectByType<SkeletonRegionDisplayController>(FindObjectsInactive.Include);
         }
 
         if (modelRoot == null && skeletonController == null)
