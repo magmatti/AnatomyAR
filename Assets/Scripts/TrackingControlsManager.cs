@@ -5,7 +5,7 @@ public class TrackingControlsManager : MonoBehaviour
 {
     [SerializeField] private Toggle modelViewToggle;
     [SerializeField] private Toggle debugLinesToggle;
-    [SerializeField] private TrackedHandModelController handModelController;
+    [SerializeField] private HandModelController handModelController;
     [SerializeField] private HandSkeletonDebugVisualizer handSkeletonDebugVisualizer;
     [SerializeField] private SkeletonRegionDisplayController skeletonRegionDisplayController;
     [SerializeField] private BodyJointVisualizer bodyJointVisualizer;
