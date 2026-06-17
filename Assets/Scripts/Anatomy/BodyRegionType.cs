@@ -1,4 +1,4 @@
-public enum BodyRegion
+public enum BodyRegionType
 {
     Head,
     Torso,

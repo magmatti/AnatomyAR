@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class BodyRegionDefinition
 {
-    public BodyRegion region;
+    public BodyRegionType region;
     public string[] namePatterns;
     public Transform[] explicitObjects;
     public bool includeLeftRoot = true;

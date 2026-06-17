@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TrackedHandModelController : MonoBehaviour
+public class HandModelController : MonoBehaviour
 {
     [SerializeField] private HandJointTracker handJointTracker;
     [SerializeField] private Transform handModelRoot;

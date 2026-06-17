@@ -39,7 +39,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
     private Quaternion currentRotation = Quaternion.identity;
     private Vector3 currentScale;
 
-    public BodyRegion? CurrentRegion { get; private set; }
+    public BodyRegionType? CurrentRegion { get; private set; }
 
     public IReadOnlyList<Renderer> AllRenderers => allRenderers;
     public bool ModelViewEnabled => modelViewEnabled;
@@ -88,9 +88,9 @@ public class SkeletonRegionDisplayController : MonoBehaviour
         }
     }
 
-    public void ShowRegion(BodyRegion region)
+    public void ShowRegion(BodyRegionType region)
     {
-        if (region == BodyRegion.Head)
+        if (region == BodyRegionType.Head)
         {
             HideAll();
             return;
@@ -211,7 +211,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
             return string.Empty;
         }
 
-        string cleanName = rawName.Replace("_", " ").Trim();
+        string cleanName = rawName.Replace("_", " ").Trim().TrimEnd('.');
 
         if (cleanName.EndsWith(".r", System.StringComparison.OrdinalIgnoreCase) ||
             cleanName.EndsWith(".l", System.StringComparison.OrdinalIgnoreCase))
@@ -219,7 +219,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
             cleanName = cleanName.Substring(0, cleanName.Length - 2).Trim();
         }
 
-        return cleanName;
+        return cleanName.TrimEnd('.');
     }
 
     private Transform GetSkeletonPart(Transform candidate)
@@ -341,7 +341,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
         skeletonRoot.GetComponentsInChildren(true, allRenderers);
     }
 
-    private BodyRegionDefinition FindDefinition(BodyRegion region)
+    private BodyRegionDefinition FindDefinition(BodyRegionType region)
     {
         if (regionDefinitions == null)
         {
@@ -440,45 +440,45 @@ public class SkeletonRegionDisplayController : MonoBehaviour
     {
         return new[]
         {
-            Definition(BodyRegion.Head, true, true,
+            Definition(BodyRegionType.Head, true, true,
                 "atlas", "axis", "cervical vertebrae", "ethmoid", "frontal", "mandible",
                 "maxilla", "nasal", "zygomatic", "temporal", "parietal", "occipital",
                 "sphenoid", "vomer", "lacrimal", "palatine", "nasal concha", "tooth",
                 "canine", "incisor", "molar", "premolar"),
 
-            Definition(BodyRegion.Torso, true, true,
+            Definition(BodyRegionType.Torso, true, true,
                 "rib", "thoracic vertebrae", "lumbar vertebrae", "sternum", "costal cart",
                 "sacrum", "coccyx", "clavicle", "scapula", "hip bone"),
 
-            Definition(BodyRegion.LeftUpperArm, true, false, "humerus", "scapula", "clavicle"),
-            Definition(BodyRegion.RightUpperArm, false, true, "humerus", "scapula", "clavicle"),
-            Definition(BodyRegion.LeftForearm, true, false, "radius", "ulna"),
-            Definition(BodyRegion.RightForearm, false, true, "radius", "ulna"),
-            Definition(BodyRegion.LeftHand, true, false,
+            Definition(BodyRegionType.LeftUpperArm, true, false, "humerus", "scapula", "clavicle"),
+            Definition(BodyRegionType.RightUpperArm, false, true, "humerus", "scapula", "clavicle"),
+            Definition(BodyRegionType.LeftForearm, true, false, "radius", "ulna"),
+            Definition(BodyRegionType.RightForearm, false, true, "radius", "ulna"),
+            Definition(BodyRegionType.LeftHand, true, false,
                 "metacarpal", "capitate", "hamate", "lunate", "pisiform", "scaphoid",
                 "trapezium", "trapezoid", "triquetrum", "phalanx of 1st finger",
                 "phalanx of 2d finger", "phalanx of 3", "phalanx of 4th finger",
                 "phalanx of 5th finger", "sesamoid_bones_of_hand", "sesamoid bones of hand"),
-            Definition(BodyRegion.RightHand, false, true,
+            Definition(BodyRegionType.RightHand, false, true,
                 "metacarpal", "capitate", "hamate", "lunate", "pisiform", "scaphoid",
                 "trapezium", "trapezoid", "triquetrum", "phalanx of 1st finger",
                 "phalanx of 2d finger", "phalanx of 3", "phalanx of 4th finger",
                 "phalanx of 5th finger", "sesamoid_bones_of_hand", "sesamoid bones of hand"),
 
-            Definition(BodyRegion.LeftThigh, true, false, "femur", "hip bone", "patella"),
-            Definition(BodyRegion.RightThigh, false, true, "femur", "hip bone", "patella"),
-            Definition(BodyRegion.LeftLowerLeg, true, false, "tibia", "fibula", "patella"),
-            Definition(BodyRegion.RightLowerLeg, false, true, "tibia", "fibula", "patella"),
-            Definition(BodyRegion.LeftFoot, true, false,
+            Definition(BodyRegionType.LeftThigh, true, false, "femur", "hip bone", "patella"),
+            Definition(BodyRegionType.RightThigh, false, true, "femur", "hip bone", "patella"),
+            Definition(BodyRegionType.LeftLowerLeg, true, false, "tibia", "fibula", "patella"),
+            Definition(BodyRegionType.RightLowerLeg, false, true, "tibia", "fibula", "patella"),
+            Definition(BodyRegionType.LeftFoot, true, false,
                 "talus", "calcaneus", "navicular", "cuboid", "cuneiform", "metatarsal",
                 "of foot", "sesamoid bones of foot"),
-            Definition(BodyRegion.RightFoot, false, true,
+            Definition(BodyRegionType.RightFoot, false, true,
                 "talus", "calcaneus", "navicular", "cuboid", "cuneiform", "metatarsal",
                 "of foot", "sesamoid bones of foot")
         };
     }
 
-    private static BodyRegionDefinition Definition(BodyRegion region, bool includeLeftRoot, bool includeRightRoot, params string[] patterns)
+    private static BodyRegionDefinition Definition(BodyRegionType region, bool includeLeftRoot, bool includeRightRoot, params string[] patterns)
     {
         return new BodyRegionDefinition
         {
