@@ -5,19 +5,6 @@ using UnityEngine.XR.ARSubsystems;
 
 public class BodyJointVisualizer : MonoBehaviour
 {
-    [System.Serializable]
-    public class BodyJointIndexMapping
-    {
-        public BodyJointType jointType;
-        public int arKitJointIndex;
-
-        public BodyJointIndexMapping(BodyJointType jointType, int arKitJointIndex)
-        {
-            this.jointType = jointType;
-            this.arKitJointIndex = arKitJointIndex;
-        }
-    }
-
     [Header("AR")]
     [SerializeField] private ARHumanBodyManager humanBodyManager;
 

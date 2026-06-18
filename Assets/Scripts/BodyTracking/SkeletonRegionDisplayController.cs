@@ -3,20 +3,19 @@ using UnityEngine;
 
 public class SkeletonRegionDisplayController : MonoBehaviour
 {
-    [Header("Hierarchy")]
     [SerializeField] private Transform skeletonRoot;
     [SerializeField] private string leftRootName = "left_skeleton";
     [SerializeField] private string rightRootName = "right_skeleton";
 
-    [Header("Region Mapping")]
+    // region mapping
     [SerializeField] private BodyRegionDefinition[] regionDefinitions;
     [SerializeField] private bool buildDefaultMappingsWhenEmpty = true;
     [SerializeField] private bool hideOnStart = true;
 
-    [Header("Visibility")]
+    // visibility
     [SerializeField] private bool modelViewEnabled = true;
 
-    [Header("Tracked Placement")]
+    // tracked placement
     [SerializeField] private bool followTrackedRegion = true;
     [SerializeField] private float trackedScaleMultiplier = 1f;
     [SerializeField] private float minimumScale = 0.05f;
@@ -25,9 +24,8 @@ public class SkeletonRegionDisplayController : MonoBehaviour
     [SerializeField] private float rotationSmoothing = 14f;
     [SerializeField] private float scaleSmoothing = 14f;
     [SerializeField] private bool faceCameraWhenTracked = true;
-    [Tooltip("Applied after camera-facing rotation. Keep this at zero unless the imported skeleton's local front axis needs correction.")]
+    
     [SerializeField] private Vector3 modelRotationOffsetEuler = Vector3.zero;
-    [Tooltip("Offset in camera-relative meters after the detected region has been centered. X/Y follow camera right/up, Z follows camera forward.")]
     [SerializeField] private Vector3 cameraRelativeOffset = Vector3.zero;
 
     private readonly List<Renderer> allRenderers = new();
@@ -478,7 +476,11 @@ public class SkeletonRegionDisplayController : MonoBehaviour
         };
     }
 
-    private static BodyRegionDefinition Definition(BodyRegionType region, bool includeLeftRoot, bool includeRightRoot, params string[] patterns)
+    private static BodyRegionDefinition Definition(
+        BodyRegionType region, 
+        bool includeLeftRoot, 
+        bool includeRightRoot, 
+        params string[] patterns)
     {
         return new BodyRegionDefinition
         {
