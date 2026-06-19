@@ -455,6 +455,7 @@ GameObject:
   m_Component:
   - component: {fileID: 351467497}
   - component: {fileID: 351467498}
+  - component: {fileID: 351467500}
   - component: {fileID: 351467499}
   m_Layer: 0
   m_Name: BodyTrackingManager
@@ -490,9 +491,23 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e1fe98482ca74e238372cb8d9eed5bd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BodyJointVisualizer
+  m_EditorClassIdentifier: Assembly-CSharp::BodyJointTracker
   humanBodyManager: {fileID: 1770914362}
   jointMappings: []
+  smoothingSpeed: 18
+--- !u!114 &351467500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351467496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbfc4af3a5404e7195fe83d05eee70e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BodySkeletonDebugVisualizer
+  tracker: {fileID: 351467498}
   jointPrefab: {fileID: 1961490679550086717, guid: 3c3256525f2b14b829e6b292effcc69a, type: 3}
   showDebugVisualization: 1
   drawDebugConnections: 1
@@ -501,7 +516,6 @@ MonoBehaviour:
   debugLineWidth: 0.01
   debugJointColor: {r: 0.75, g: 0.15, b: 1, a: 1}
   debugLineColor: {r: 0.1, g: 1, b: 0.65, a: 1}
-  smoothingSpeed: 18
 --- !u!114 &351467499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -756,7 +770,7 @@ MonoBehaviour:
   handModelController: {fileID: 0}
   handSkeletonDebugVisualizer: {fileID: 0}
   skeletonRegionDisplayController: {fileID: 1238304499}
-  bodyJointVisualizer: {fileID: 351467498}
+  bodySkeletonDebugVisualizer: {fileID: 351467500}
 --- !u!1 &704918161
 GameObject:
   m_ObjectHideFlags: 0

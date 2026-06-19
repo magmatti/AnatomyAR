@@ -2051,7 +2051,7 @@ MonoBehaviour:
   handModelController: {fileID: 531987897}
   handSkeletonDebugVisualizer: {fileID: 531987899}
   skeletonRegionDisplayController: {fileID: 0}
-  bodyJointVisualizer: {fileID: 0}
+  bodySkeletonDebugVisualizer: {fileID: 0}
 --- !u!1 &1931443477
 GameObject:
   m_ObjectHideFlags: 0
