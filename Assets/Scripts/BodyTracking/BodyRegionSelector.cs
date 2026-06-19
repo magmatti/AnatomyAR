@@ -17,7 +17,7 @@ public class BodyRegionSelector : MonoBehaviour
     }
 
     [Header("References")]
-    [SerializeField] private BodyJointVisualizer jointProvider;
+    [SerializeField] private BodyJointTracker jointProvider;
     [SerializeField] private SkeletonRegionDisplayController displayController;
     [SerializeField] private Camera arCamera;
 
@@ -60,7 +60,7 @@ public class BodyRegionSelector : MonoBehaviour
     {
         if (jointProvider == null)
         {
-            jointProvider = FindFirstObjectByType<BodyJointVisualizer>();
+            jointProvider = FindFirstObjectByType<BodyJointTracker>();
         }
 
         if (displayController == null)
