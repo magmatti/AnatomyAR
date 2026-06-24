@@ -35,8 +35,21 @@ public static class BodySkeletonData
         new[] { BodyJointType.RightHip, BodyJointType.RightKnee, BodyJointType.RightAnkle }
     };
 
+    private static readonly BodyRegionJointMapping[] supportedRegionMappings =
+    {
+        new(BodyRegionType.Torso,
+            BodyJointType.LeftShoulder, BodyJointType.RightShoulder, BodyJointType.LeftHip, 
+            BodyJointType.RightHip),
+        new(BodyRegionType.LeftThigh, BodyJointType.LeftHip, BodyJointType.LeftKnee),
+        new(BodyRegionType.RightThigh, BodyJointType.RightHip, BodyJointType.RightKnee),
+        new(BodyRegionType.LeftLowerLeg, BodyJointType.LeftKnee, BodyJointType.LeftAnkle),
+        new(BodyRegionType.RightLowerLeg, BodyJointType.RightKnee, BodyJointType.RightAnkle)
+    };
+
     public static IReadOnlyList<BodyJointType> DebugJoints => debugJoints;
     public static IReadOnlyList<BodyJointType[]> BodyConnections => bodyConnections;
+    internal static IReadOnlyList<BodyRegionJointMapping> SupportedRegionMappings => 
+        supportedRegionMappings;
 
     public static int DebugConnectionSegmentCount
     {
@@ -72,5 +85,17 @@ public static class BodySkeletonData
             new BodyJointIndexMapping(BodyJointType.RightWrist, 49),
             new BodyJointIndexMapping(BodyJointType.Head, 77)
         };
+    }
+}
+
+internal sealed class BodyRegionJointMapping
+{
+    public BodyRegionType Region { get; }
+    public BodyJointType[] Joints { get; }
+
+    public BodyRegionJointMapping(BodyRegionType region, params BodyJointType[] joints)
+    {
+        Region = region;
+        Joints = joints;
     }
 }
