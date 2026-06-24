@@ -53,7 +53,7 @@ public class SkeletonRegionDisplayController : MonoBehaviour
 
         if (!modelViewEnabled)
         {
-            SetAllRendererVisibility(false);
+            HideAllRenderers();
             return;
         }
 
@@ -88,12 +88,6 @@ public class SkeletonRegionDisplayController : MonoBehaviour
 
     public void ShowRegion(BodyRegionType region)
     {
-        if (region == BodyRegionType.Head)
-        {
-            HideAll();
-            return;
-        }
-
         if (CurrentRegion != region)
         {
             placementInitialized = false;
@@ -322,13 +316,13 @@ public class SkeletonRegionDisplayController : MonoBehaviour
         return Quaternion.LookRotation(towardCamera.normalized, Vector3.up) * offsetRotation;
     }
 
-    private void SetAllRendererVisibility(bool isVisible)
+    private void HideAllRenderers()
     {
         foreach (Renderer renderer in allRenderers)
         {
             if (renderer != null)
             {
-                renderer.enabled = isVisible;
+                renderer.enabled = false;
             }
         }
     }
@@ -438,41 +432,14 @@ public class SkeletonRegionDisplayController : MonoBehaviour
     {
         return new[]
         {
-            Definition(BodyRegionType.Head, true, true,
-                "atlas", "axis", "cervical vertebrae", "ethmoid", "frontal", "mandible",
-                "maxilla", "nasal", "zygomatic", "temporal", "parietal", "occipital",
-                "sphenoid", "vomer", "lacrimal", "palatine", "nasal concha", "tooth",
-                "canine", "incisor", "molar", "premolar"),
-
             Definition(BodyRegionType.Torso, true, true,
                 "rib", "thoracic vertebrae", "lumbar vertebrae", "sternum", "costal cart",
                 "sacrum", "coccyx", "clavicle", "scapula", "hip bone"),
 
-            Definition(BodyRegionType.LeftUpperArm, true, false, "humerus", "scapula", "clavicle"),
-            Definition(BodyRegionType.RightUpperArm, false, true, "humerus", "scapula", "clavicle"),
-            Definition(BodyRegionType.LeftForearm, true, false, "radius", "ulna"),
-            Definition(BodyRegionType.RightForearm, false, true, "radius", "ulna"),
-            Definition(BodyRegionType.LeftHand, true, false,
-                "metacarpal", "capitate", "hamate", "lunate", "pisiform", "scaphoid",
-                "trapezium", "trapezoid", "triquetrum", "phalanx of 1st finger",
-                "phalanx of 2d finger", "phalanx of 3", "phalanx of 4th finger",
-                "phalanx of 5th finger", "sesamoid_bones_of_hand", "sesamoid bones of hand"),
-            Definition(BodyRegionType.RightHand, false, true,
-                "metacarpal", "capitate", "hamate", "lunate", "pisiform", "scaphoid",
-                "trapezium", "trapezoid", "triquetrum", "phalanx of 1st finger",
-                "phalanx of 2d finger", "phalanx of 3", "phalanx of 4th finger",
-                "phalanx of 5th finger", "sesamoid_bones_of_hand", "sesamoid bones of hand"),
-
             Definition(BodyRegionType.LeftThigh, true, false, "femur", "hip bone", "patella"),
             Definition(BodyRegionType.RightThigh, false, true, "femur", "hip bone", "patella"),
             Definition(BodyRegionType.LeftLowerLeg, true, false, "tibia", "fibula", "patella"),
-            Definition(BodyRegionType.RightLowerLeg, false, true, "tibia", "fibula", "patella"),
-            Definition(BodyRegionType.LeftFoot, true, false,
-                "talus", "calcaneus", "navicular", "cuboid", "cuneiform", "metatarsal",
-                "of foot", "sesamoid bones of foot"),
-            Definition(BodyRegionType.RightFoot, false, true,
-                "talus", "calcaneus", "navicular", "cuboid", "cuneiform", "metatarsal",
-                "of foot", "sesamoid bones of foot")
+            Definition(BodyRegionType.RightLowerLeg, false, true, "tibia", "fibula", "patella")
         };
     }
 
