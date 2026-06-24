@@ -537,7 +537,6 @@ MonoBehaviour:
   minimumViewportSpan: 0.08
   idealViewportSpan: 0.45
   minimumTrackedWorldSpan: 0.18
-  enableKeyboardDebug: 1
 --- !u!1 &353653712
 GameObject:
   m_ObjectHideFlags: 0
