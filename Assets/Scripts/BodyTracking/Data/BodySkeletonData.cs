@@ -86,6 +86,36 @@ public static class BodySkeletonData
             new BodyJointIndexMapping(BodyJointType.Head, 77)
         };
     }
+
+    public static BodyRegionDefinition[] CreateDefaultRegionDefinitions()
+    {
+        return new[]
+        {
+            Definition(BodyRegionType.Torso, true, true,
+                "rib", "thoracic vertebrae", "lumbar vertebrae", "sternum", "costal cart",
+                "sacrum", "coccyx", "clavicle", "scapula", "hip bone"),
+
+            Definition(BodyRegionType.LeftThigh, true, false, "femur", "hip bone", "patella"),
+            Definition(BodyRegionType.RightThigh, false, true, "femur", "hip bone", "patella"),
+            Definition(BodyRegionType.LeftLowerLeg, true, false, "tibia", "fibula", "patella"),
+            Definition(BodyRegionType.RightLowerLeg, false, true, "tibia", "fibula", "patella")
+        };
+    }
+
+    private static BodyRegionDefinition Definition(
+        BodyRegionType region,
+        bool includeLeftRoot,
+        bool includeRightRoot,
+        params string[] patterns)
+    {
+        return new BodyRegionDefinition
+        {
+            region = region,
+            includeLeftRoot = includeLeftRoot,
+            includeRightRoot = includeRightRoot,
+            namePatterns = patterns
+        };
+    }
 }
 
 internal sealed class BodyRegionJointMapping
