@@ -49,8 +49,6 @@ MonoBehaviour:
   skeletonRoot: {fileID: 6307634516621991672}
   leftRootName: left_skeleton
   rightRootName: right_skeleton
-  regionDefinitions: []
-  buildDefaultMappingsWhenEmpty: 1
   hideOnStart: 1
   modelViewEnabled: 1
   followTrackedRegion: 1
