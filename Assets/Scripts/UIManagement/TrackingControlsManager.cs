@@ -8,7 +8,7 @@ public class TrackingControlsManager : MonoBehaviour
     [SerializeField] private HandModelController handModelController;
     [SerializeField] private HandSkeletonDebugVisualizer handSkeletonDebugVisualizer;
     [SerializeField] private SkeletonRegionDisplayController skeletonRegionDisplayController;
-    [SerializeField] private BodyJointVisualizer bodyJointVisualizer;
+    [SerializeField] private BodySkeletonDebugVisualizer bodySkeletonDebugVisualizer;
 
     private void Start()
     {
@@ -58,12 +58,12 @@ public class TrackingControlsManager : MonoBehaviour
             return;
         }
 
-        if (bodyJointVisualizer != null)
+        if (bodySkeletonDebugVisualizer != null)
         {
             debugLinesToggle
-                .SetIsOnWithoutNotify(bodyJointVisualizer.DebugLinesVisible);
+                .SetIsOnWithoutNotify(bodySkeletonDebugVisualizer.DebugLinesVisible);
             debugLinesToggle.onValueChanged
-                .AddListener(bodyJointVisualizer.SetDebugLinesVisible);
+                .AddListener(bodySkeletonDebugVisualizer.SetDebugLinesVisible);
             return;
         }
 

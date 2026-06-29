@@ -4,6 +4,7 @@ using UnityEngine;
 public sealed class BoneTargetResolver
 {
     private readonly HandBoneNameResolver handNameResolver;
+    private readonly SkeletonBoneNameResolver skeletonNameResolver = new();
 
     private Camera camera;
     private SkeletonRegionDisplayController skeletonController;
@@ -61,14 +62,14 @@ public sealed class BoneTargetResolver
         
         if (skeletonController != null)
         {
-            if (!skeletonController.IsVisibleSkeletonPart(candidate))
+            if (!skeletonController.TryGetVisibleSkeletonPart(candidate, out Transform skeletonPart))
             {
                 return false;
             }
 
-            string cleanName = skeletonController.GetCleanBoneName(candidate);
+            string cleanName = skeletonNameResolver.GetBoneName(skeletonPart);
             label = string.IsNullOrWhiteSpace(cleanName)
-                ? SkeletonRegionDisplayController.CleanBoneName(candidate.name)
+                ? skeletonNameResolver.GetBoneName(candidate)
                 : cleanName;
             return true;
         }
