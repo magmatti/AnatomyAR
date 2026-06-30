@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
@@ -46,14 +45,6 @@ public class BoneLabelController : MonoBehaviour
     {
         InitializeServices();
         HideSelection();
-    }
-
-    private void Update()
-    {
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            TryHandleTap(Mouse.current.position.ReadValue());
-        }
     }
 
     private void LateUpdate()

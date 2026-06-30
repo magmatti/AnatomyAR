@@ -12,20 +12,6 @@ public class HandSkeletonDebugVisualizer : MonoBehaviour
     private readonly Dictionary<HandJointType, GameObject> jointObjects = new();
     private readonly List<LineRenderer> lineRenderers = new();
 
-    private readonly HandJointType[][] handConnections =
-    {
-        new[] { HandJointType.Wrist, HandJointType.ThumbCMC, HandJointType.ThumbMP,
-                HandJointType.ThumbIP, HandJointType.ThumbTip },
-        new[] { HandJointType.Wrist, HandJointType.IndexMCP, HandJointType.IndexPIP,
-                HandJointType.IndexDIP, HandJointType.IndexTip },
-        new[] { HandJointType.Wrist, HandJointType.MiddleMCP, HandJointType.MiddlePIP,
-                HandJointType.MiddleDIP, HandJointType.MiddleTip },
-        new[] { HandJointType.Wrist, HandJointType.RingMCP, HandJointType.RingPIP,
-                HandJointType.RingDIP, HandJointType.RingTip },
-        new[] { HandJointType.Wrist, HandJointType.LittleMCP, HandJointType.LittlePIP,
-                HandJointType.LittleDIP, HandJointType.LittleTip }
-    };
-
     public void SetDebugLinesVisible(bool isVisible)
     {
         showDebugVisualization = isVisible;
@@ -101,9 +87,9 @@ public class HandSkeletonDebugVisualizer : MonoBehaviour
 
     private void CreateLineRenderers()
     {
-        foreach (HandJointType[] finger in handConnections)
+        foreach (IReadOnlyList<HandJointType> finger in HandJointConnections.FingerChains)
         {
-            for (int i = 0; i < finger.Length - 1; i++)
+            for (int i = 0; i < finger.Count - 1; i++)
             {
                 GameObject lineObject = new GameObject($"Line_{finger[i]}_{finger[i + 1]}");
                 lineObject.transform.SetParent(transform);
@@ -123,9 +109,9 @@ public class HandSkeletonDebugVisualizer : MonoBehaviour
     {
         int lineIndex = 0;
 
-        foreach (HandJointType[] finger in handConnections)
+        foreach (IReadOnlyList<HandJointType> finger in HandJointConnections.FingerChains)
         {
-            for (int i = 0; i < finger.Length - 1; i++)
+            for (int i = 0; i < finger.Count - 1; i++)
             {
                 HandJointType startJoint = finger[i];
                 HandJointType endJoint = finger[i + 1];

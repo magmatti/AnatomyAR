@@ -22,6 +22,7 @@ public class HandModelController : MonoBehaviour
     private Vector3 currentPosition;
     private Quaternion currentRotation = Quaternion.identity;
     private Vector3 currentScale = Vector3.one;
+    private readonly HandModelPlacementCalculator placementCalculator = new();
 
     public bool ModelViewEnabled => modelViewEnabled;
 
@@ -29,9 +30,10 @@ public class HandModelController : MonoBehaviour
     {
         modelViewEnabled = isEnabled;
 
-        if (!modelViewEnabled && handModelRoot != null && handModelRoot.gameObject.activeSelf)
+        if (!modelViewEnabled)
         {
-            handModelRoot.gameObject.SetActive(false);
+            HideModelAndReset();
+            return;
         }
 
         initialized = false;
@@ -52,31 +54,43 @@ public class HandModelController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (handJointTracker == null || handModelRoot == null)
+        if (handJointTracker == null || handModelRoot == null) return;
+
+        if (!modelViewEnabled || !handJointTracker.IsHandVisible)
         {
+            HideModelAndReset();
             return;
         }
 
-        if (!modelViewEnabled)
-        {
-            if (handModelRoot.gameObject.activeSelf)
-            {
-                handModelRoot.gameObject.SetActive(false);
-            }
+        if (!TryGetJointPose(out HandModelJointPose jointPose)) return;
 
-            initialized = false;
-            return;
+        if (!placementCalculator.TryCalculateTargetPlacement(
+                jointPose,
+                positionOffset,
+                rotationOffsetEuler,
+                scaleMultiplier,
+                scaleFromFingerTip,
+                arCamera,
+                out HandModelPlacement targetPlacement)) return;
+
+        UpdateSmoothedPlacement(targetPlacement);
+        ShowModel();
+        ApplyCurrentPlacement();
+    }
+
+    private void HideModelAndReset()
+    {
+        if (handModelRoot != null && handModelRoot.gameObject.activeSelf)
+        {
+            handModelRoot.gameObject.SetActive(false);
         }
 
-        if (!handJointTracker.IsHandVisible)
-        {
-            if (handModelRoot.gameObject.activeSelf)
-            {
-                handModelRoot.gameObject.SetActive(false);
-            }
-            initialized = false;
-            return;
-        }
+        initialized = false;
+    }
+
+    private bool TryGetJointPose(out HandModelJointPose jointPose)
+    {
+        jointPose = default;
 
         if (!handJointTracker.TryGetSmoothedPosition(HandJointType.Wrist, out Vector3 wrist) ||
             !handJointTracker.TryGetSmoothedPosition(HandJointType.IndexMCP, out Vector3 indexMCP) ||
@@ -84,79 +98,72 @@ public class HandModelController : MonoBehaviour
             !handJointTracker.TryGetSmoothedPosition(HandJointType.RingMCP, out Vector3 ringMCP) ||
             !handJointTracker.TryGetSmoothedPosition(HandJointType.LittleMCP, out Vector3 littleMCP))
         {
-            return;
+            return false;
         }
 
-        Vector3 palmCenter = (wrist + indexMCP + middleMCP + ringMCP + littleMCP) * 0.2f;
+        Vector3 middleTip = default;
+        bool hasMiddleTip = scaleFromFingerTip &&
+            handJointTracker.TryGetSmoothedPosition(HandJointType.MiddleTip, out middleTip);
 
-        Vector3 handUp = (middleMCP - wrist);
-        Vector3 acrossPalm = (littleMCP - indexMCP);
+        jointPose = new HandModelJointPose(
+            wrist,
+            indexMCP,
+            middleMCP,
+            ringMCP,
+            littleMCP,
+            hasMiddleTip,
+            middleTip
+        );
 
-        if (handUp.sqrMagnitude < 1e-6f || acrossPalm.sqrMagnitude < 1e-6f)
-        {
-            return;
-        }
+        return true;
+    }
 
-        handUp.Normalize();
-        acrossPalm.Normalize();
-
-        Vector3 handForward = Vector3.Cross(acrossPalm, handUp);
-
-        if (handForward.sqrMagnitude < 1e-6f)
-        {
-            return;
-        }
-
-        handForward.Normalize();
-
-        Quaternion baseRotation = Quaternion.LookRotation(handForward, handUp);
-        Quaternion targetRotation = baseRotation * Quaternion.Euler(rotationOffsetEuler);
-
-        float handSize;
-        if (scaleFromFingerTip && handJointTracker.TryGetSmoothedPosition(HandJointType.MiddleTip, out Vector3 middleTip))
-        {
-            handSize = Vector3.Distance(wrist, middleTip);
-        }
-        else
-        {
-            handSize = Vector3.Distance(wrist, middleMCP);
-        }
-
-        Vector3 targetScale = Vector3.one * (handSize * scaleMultiplier);
-
-        Vector3 inPlaneOffset = baseRotation * new Vector3(positionOffset.x, positionOffset.y, 0f);
-        Vector3 depthOffset = Vector3.zero;
-
-        if (arCamera != null && Mathf.Abs(positionOffset.z) > 1e-6f)
-        {
-            Vector3 toCamera = arCamera.transform.position - palmCenter;
-            if (toCamera.sqrMagnitude > 1e-6f)
-            {
-                depthOffset = toCamera.normalized * positionOffset.z;
-            }
-        }
-
-        Vector3 targetPosition = palmCenter + (inPlaneOffset + depthOffset) * handSize;
-
+    private void UpdateSmoothedPlacement(HandModelPlacement targetPlacement)
+    {
         if (!initialized)
         {
-            currentPosition = targetPosition;
-            currentRotation = targetRotation;
-            currentScale = targetScale;
-            initialized = true;
+            InitializePlacement(targetPlacement);
         }
         else
         {
-            currentPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * positionSmoothing);
-            currentRotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * rotationSmoothing);
-            currentScale = Vector3.Lerp(currentScale, targetScale, Time.deltaTime * scaleSmoothing);
+            SmoothPlacement(targetPlacement);
         }
+    }
 
-        if (!handModelRoot.gameObject.activeSelf)
-        {
-            handModelRoot.gameObject.SetActive(true);
-        }
+    private void InitializePlacement(HandModelPlacement targetPlacement)
+    {
+        currentPosition = targetPlacement.Position;
+        currentRotation = targetPlacement.Rotation;
+        currentScale = targetPlacement.Scale;
+        initialized = true;
+    }
 
+    private void SmoothPlacement(HandModelPlacement targetPlacement)
+    {
+        currentPosition = Vector3.Lerp(
+            currentPosition,
+            targetPlacement.Position,
+            Time.deltaTime * positionSmoothing
+        );
+        currentRotation = Quaternion.Slerp(
+            currentRotation,
+            targetPlacement.Rotation,
+            Time.deltaTime * rotationSmoothing
+        );
+        currentScale = Vector3.Lerp(
+            currentScale,
+            targetPlacement.Scale,
+            Time.deltaTime * scaleSmoothing
+        );
+    }
+
+    private void ShowModel()
+    {
+        if (!handModelRoot.gameObject.activeSelf) handModelRoot.gameObject.SetActive(true);
+    }
+
+    private void ApplyCurrentPlacement()
+    {
         handModelRoot.SetPositionAndRotation(currentPosition, currentRotation);
         handModelRoot.localScale = currentScale;
     }

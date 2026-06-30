@@ -112,3 +112,7 @@ InitTestScene*.unity*
 
 # Local Codex preferences
 AGENTS.md
+
+# Unity simulator temp files
+Assets/XR/Temp/
+Assets/XR/Temp.meta
