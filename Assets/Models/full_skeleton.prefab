@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e3d852d79fb4bc1a819280456e410dc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SkeletonRegionDisplayController
+  m_EditorClassIdentifier: Assembly-CSharp::SkeletonModelController
   skeletonRoot: {fileID: 6307634516621991672}
   leftRootName: left_skeleton
   rightRootName: right_skeleton

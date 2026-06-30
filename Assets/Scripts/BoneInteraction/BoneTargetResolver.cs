@@ -7,12 +7,12 @@ public sealed class BoneTargetResolver
     private readonly SkeletonBoneNameResolver skeletonNameResolver = new();
 
     private Camera camera;
-    private SkeletonRegionDisplayController skeletonController;
+    private SkeletonModelController skeletonController;
     private Transform modelRoot;
 
     public BoneTargetResolver(
         Camera camera,
-        SkeletonRegionDisplayController skeletonController,
+        SkeletonModelController skeletonController,
         Transform modelRoot,
         HandBoneNameResolver handNameResolver)
     {
@@ -32,7 +32,7 @@ public sealed class BoneTargetResolver
         if (skeletonController == null)
         {
             skeletonController = Object
-                .FindFirstObjectByType<SkeletonRegionDisplayController>(FindObjectsInactive.Include);
+                .FindFirstObjectByType<SkeletonModelController>(FindObjectsInactive.Include);
         }
 
         if (modelRoot == null && skeletonController == null)

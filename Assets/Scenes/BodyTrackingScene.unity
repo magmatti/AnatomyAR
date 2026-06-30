@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.6392157}
@@ -495,6 +495,27 @@ MonoBehaviour:
   humanBodyManager: {fileID: 1770914362}
   jointMappings: []
   smoothingSpeed: 18
+--- !u!114 &351467499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351467496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0cd9163cc4a413c9f82a1631f81cf3a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSelector
+  jointProvider: {fileID: 351467498}
+  displayController: {fileID: 1238304501}
+  arCamera: {fileID: 1150400569}
+  minimumScore: 0.55
+  switchDelay: 0.25
+  hideDelay: 0.4
+  minimumViewportSpan: 0.08
+  idealViewportSpan: 0.45
+  minimumTrackedWorldSpan: 0.18
 --- !u!114 &351467500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -516,27 +537,6 @@ MonoBehaviour:
   debugLineWidth: 0.01
   debugJointColor: {r: 0.75, g: 0.15, b: 1, a: 1}
   debugLineColor: {r: 0.1, g: 1, b: 0.65, a: 1}
---- !u!114 &351467499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351467496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0cd9163cc4a413c9f82a1631f81cf3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSelector
-  jointProvider: {fileID: 351467498}
-  displayController: {fileID: 0}
-  arCamera: {fileID: 1150400569}
-  minimumScore: 0.55
-  switchDelay: 0.25
-  hideDelay: 0.4
-  minimumViewportSpan: 0.08
-  idealViewportSpan: 0.45
-  minimumTrackedWorldSpan: 0.18
 --- !u!1 &353653712
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,7 +768,7 @@ MonoBehaviour:
   debugLinesToggle: {fileID: 1943352348}
   handModelController: {fileID: 0}
   handSkeletonDebugVisualizer: {fileID: 0}
-  skeletonRegionDisplayController: {fileID: 1238304499}
+  skeletonModelController: {fileID: 1238304501}
   bodySkeletonDebugVisualizer: {fileID: 351467500}
 --- !u!1 &704918161
 GameObject:
@@ -1371,20 +1371,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a052372dbd50b4f0a859824559b3942a, type: 3}
---- !u!114 &1238304499 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3381833893403740122, guid: a052372dbd50b4f0a859824559b3942a, type: 3}
-  m_PrefabInstance: {fileID: 1238304498}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e3d852d79fb4bc1a819280456e410dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SkeletonRegionDisplayController
 --- !u!4 &1238304500 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6307634516621991672, guid: a052372dbd50b4f0a859824559b3942a, type: 3}
+  m_PrefabInstance: {fileID: 1238304498}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1238304501 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3381833893403740122, guid: a052372dbd50b4f0a859824559b3942a, type: 3}
   m_PrefabInstance: {fileID: 1238304498}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1267936019

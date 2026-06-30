@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletonRegionDisplayController : MonoBehaviour
+public class SkeletonModelController : MonoBehaviour
 {
     [SerializeField] private Transform skeletonRoot;
     [SerializeField] private string leftRootName = "left_skeleton";

@@ -3,7 +3,7 @@ using UnityEngine;
 public class BodyRegionSelector : MonoBehaviour
 {
     [SerializeField] private BodyJointTracker jointProvider;
-    [SerializeField] private SkeletonRegionDisplayController displayController;
+    [SerializeField] private SkeletonModelController displayController;
     [SerializeField] private Camera arCamera;
     [SerializeField] private float minimumScore = 0.55f;
     [SerializeField] private float switchDelay = 0.25f;
@@ -30,7 +30,8 @@ public class BodyRegionSelector : MonoBehaviour
 
         if (displayController == null)
         {
-            displayController = FindFirstObjectByType<SkeletonRegionDisplayController>(FindObjectsInactive.Include);
+            displayController =
+                FindFirstObjectByType<SkeletonModelController>(FindObjectsInactive.Include);
         }
 
         if (arCamera == null)

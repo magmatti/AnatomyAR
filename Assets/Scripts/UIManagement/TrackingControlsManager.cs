@@ -7,7 +7,7 @@ public class TrackingControlsManager : MonoBehaviour
     [SerializeField] private Toggle debugLinesToggle;
     [SerializeField] private HandModelController handModelController;
     [SerializeField] private HandSkeletonDebugVisualizer handSkeletonDebugVisualizer;
-    [SerializeField] private SkeletonRegionDisplayController skeletonRegionDisplayController;
+    [SerializeField] private SkeletonModelController skeletonModelController;
     [SerializeField] private BodySkeletonDebugVisualizer bodySkeletonDebugVisualizer;
 
     private void Start()
@@ -31,11 +31,11 @@ public class TrackingControlsManager : MonoBehaviour
             return;
         }
 
-        if (skeletonRegionDisplayController != null)
+        if (skeletonModelController != null)
         {
-            modelViewToggle.SetIsOnWithoutNotify(skeletonRegionDisplayController.ModelViewEnabled);
+            modelViewToggle.SetIsOnWithoutNotify(skeletonModelController.ModelViewEnabled);
             modelViewToggle.onValueChanged
-                .AddListener(skeletonRegionDisplayController.SetModelViewEnabled);
+                .AddListener(skeletonModelController.SetModelViewEnabled);
             return;
         }
 

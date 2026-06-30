@@ -8,7 +8,7 @@ public class BoneLabelController : MonoBehaviour
 {
     // references
     [SerializeField] private Camera arCamera;
-    [SerializeField] private SkeletonRegionDisplayController skeletonController;
+    [SerializeField] private SkeletonModelController skeletonController;
     [SerializeField] private Transform modelRoot;
     [SerializeField] private BoneLabelUIManager labelUIManager;
 
