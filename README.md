@@ -9,6 +9,13 @@ It is built around AR Foundation, ARKit and a small native [iOS Vision](https://
 - Hand tracking scene detects hand joints with [Apple Vision](https://developer.apple.com/documentation/vision) and aligns a hand model in AR.
 - Tap bones to see labels and highlight.
 
+## Screenshots
+
+<img width="295" height="639" alt="IMG_5522" src="https://github.com/user-attachments/assets/3f8d061b-0d53-4356-8518-aa91f5cc3085" />
+<img width="295" height="639" alt="IMG_5521" src="https://github.com/user-attachments/assets/808c1a58-bde1-4b93-b4b8-f681c130ff0a" />
+<img width="295" height="639" alt="IMG_5529" src="https://github.com/user-attachments/assets/058b11eb-afa9-46a3-96c6-4fdb85ae5a14" />
+
+
 ## Requirements
 
 - Unity `6000.3.10f1` or a compatible Unity 6 version.
