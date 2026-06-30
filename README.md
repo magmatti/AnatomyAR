@@ -24,14 +24,6 @@ It is built around AR Foundation, ARKit and a small native [iOS Vision](https://
 4. Go to build profiles and add every scene in scene list.
 5. Switch the build target to iOS and deploy to an ARKit-capable device.
 
-## Project Structure
-
-- `Assets/Scripts/BodyTracking` - AR body joint tracking, region selection, skeleton placement, and debug rendering.
-- `Assets/Scripts/HandTracking` - iOS Vision hand tracking, joint smoothing, hand model placement, and debug rendering.
-- `Assets/Scripts/BoneInteraction` - bone raycasting, labels, and highlighting.
-- `Assets/Scripts/UIManagement` - scene navigation and tracking controls.
-- `Assets/Models` - hand and skeleton model assets.
-
 ## Contributing
 
 Contributions are welcome. Fork the project, create a focused branch and open a pull request with a clear description what changed.
